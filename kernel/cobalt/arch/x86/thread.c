@@ -472,7 +472,7 @@ void xnarch_leave_root(struct xnthread *root)
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,14,0)
 	/* restore current's fpregs */
 	__cpu_invalidate_fpregs_state();
-	switch_fpu_finish(&current->thread.fpu, smp_processor_id());
+	switch_fpu_finish(&current->thread.fpu);
 #else
 	/* mark current thread as not owning the FPU anymore */
 	if (fpregs_active())
@@ -541,7 +541,7 @@ void xnarch_init_shadow_tcb(struct xnthread *thread)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 	fpu__activate_fpstate_read(&p->thread.fpu);
 #else
-	fpu__initialize(&p->thread.fpu);
+	fpu__clear(&p->thread.fpu);
 #endif
 #endif /* ! IPIPE_X86_FPU_EAGER */
 }
